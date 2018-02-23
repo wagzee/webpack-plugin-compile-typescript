@@ -149,7 +149,7 @@ module.exports = class CompileTypescriptPlugin {
         }
 
         output.outputFiles.forEach((o) => {
-            FileListPlugin.mkDirByPathSync(FileListPlugin.getFolders(o.name));
+            this.constructor.mkDirByPathSync(this.constructor.getFolders(o.name));
             fs.writeFileSync(o.name, o.text, 'utf8');
         });
     }
