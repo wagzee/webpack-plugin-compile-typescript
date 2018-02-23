@@ -8,13 +8,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wagzee/webpack-plugin-compile-typescript.git"
+    "url": "git://github.com/wagzee/webpack-plugin-compile-typescript.git"
   },
   "author": "wagzee",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/wagzee/webpack-plugin-compile-typescript/issues"
   },
+  "keywords": [
+    "Webpack",
+    "compiler",
+    "copy",
+    "TypeScript",
+    "Microsoft",
+    "language",
+    "javascript",
+    "plugin"
+  ],
   "homepage": "https://github.com/wagzee/webpack-plugin-compile-typescript#readme",
   "dependencies": {
     "@types/node": "^9.4.6",
