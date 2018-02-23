@@ -15,13 +15,17 @@ new CompileTypescriptFilesPlugin({
 
 ##### Options
 **folders:** *string[]*
+
 list the routes what would you like to scan for typescript files (recursive).
 
 **watch:** *boolean*
+
 if its true only the changed files will be compiled on webpack emit. if its false all the TS files will be compiled on every webpack emit.
 
 **compileOptions:** *object*
+
 Config object for typescript compile settings.
+
 **Example:**
 ```
 {
