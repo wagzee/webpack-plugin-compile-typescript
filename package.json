@@ -1,0 +1,24 @@
+{
+  "name": "webpack-plugin-compile-typescript",
+  "version": "0.0.1",
+  "description": "plugin for webpack to allow compiling typescript files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wagzee/webpack-plugin-compile-typescript.git"
+  },
+  "author": "wagzee",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wagzee/webpack-plugin-compile-typescript/issues"
+  },
+  "homepage": "https://github.com/wagzee/webpack-plugin-compile-typescript#readme",
+  "dependencies": {
+    "@types/node": "^9.4.6",
+    "glob": "^7.1.2",
+    "typescript": "^2.7.2"
+  }
+}
