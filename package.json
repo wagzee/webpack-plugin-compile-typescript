@@ -32,9 +32,5 @@
     "chokidar": "^2.0.3",
     "glob": "^7.1.2",
     "typescript": "^2.7.2"
-  },
-  "devDependencies": {
-    "webpack": "^4.6.0",
-    "webpack-cli": "^2.0.14"
   }
 }
