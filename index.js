@@ -31,8 +31,27 @@ module.exports = class CompileTypescriptPlugin {
             ],
         }, (this.pluginOptions.compileOptions || {}));
 
-        const folders = this.pluginOptions.folders ? `/@(${(this.pluginOptions.folders || []).join('|')})` : '';
-        this.fileList = glob.sync(`.${folders}/**/*.@(ts|tsx)`);
+        this.pluginOptions.src = this.pluginOptions.src || {};
+        this.pluginOptions.src.root = this.pluginOptions.src.root || '';
+        this.pluginOptions.src.folders = this.pluginOptions.src.folders || {};
+
+        this.fileList = (Object.entries(this.pluginOptions.src.folders) || []).reduce((fileList, [sourcePattern, destinationPattern]) => {
+            return [
+                ...fileList,
+                ...glob.sync(`./${this.pluginOptions.src.root}/${sourcePattern}.@(ts|tsx)`).map((file) => {
+                    const fileName = path.basename(file);
+                    const pathReplacer = `./${this.pluginOptions.src.root}${(sourcePattern.replace('/**', '').replace('/*', ''))}`;
+                    const subPath = path.dirname(file).replace(pathReplacer, '');
+
+                    return {
+                        source: file,
+                        destination: path.normalize(destinationPattern
+                            .replace('/**', `/${subPath}`)
+                            .replace('/*', `/${fileName}`)),
+                    };
+                }),
+            ];
+        }, []);
     }
 
     apply(compiler) {

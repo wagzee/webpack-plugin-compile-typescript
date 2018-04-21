@@ -1,10 +1,11 @@
 {
   "name": "webpack-plugin-compile-typescript",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "plugin for webpack to allow compiling typescript files",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "webpack"
   },
   "repository": {
     "type": "git",
@@ -30,5 +31,9 @@
     "@types/node": "^9.4.6",
     "glob": "^7.1.2",
     "typescript": "^2.7.2"
+  },
+  "devDependencies": {
+    "webpack": "^4.6.0",
+    "webpack-cli": "^2.0.14"
   }
 }
