@@ -4,15 +4,15 @@ const tsc = require('typescript');
 module.exports = {
     watch: true,
     mode: 'development',
-    entry: "./src/test.ts",
+    entry: "./src/index.js",
     plugins: [
         new CompileTypescriptFilesPlugin({
             watch: true,
             src: {
-                root: 'src/',
+                root: '/',
                 folders: {
-                    'server/**/*': 'server/*',
-                    'shared/**/*': 'shared/**/*'
+                    'shared/**/*': '/**/*',
+                    'nodeserver/**/*': '/**/*'
                 },
             },
             compileOptions: {

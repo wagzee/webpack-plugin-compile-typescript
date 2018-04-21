@@ -29,6 +29,7 @@
   "homepage": "https://github.com/wagzee/webpack-plugin-compile-typescript#readme",
   "dependencies": {
     "@types/node": "^9.4.6",
+    "chokidar": "^2.0.3",
     "glob": "^7.1.2",
     "typescript": "^2.7.2"
   },

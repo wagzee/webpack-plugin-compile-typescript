@@ -7,16 +7,24 @@ Create new plugin for your webpack.config.js
 ```sh
 new CompileTypescriptFilesPlugin({
     watch: true,
-    folders: [
-        'foldersToScan',
-    ],
+    src: {
+        root: '/',
+        folders: {
+            'shared/**/*': '/**/*',
+            'nodeserver/**/*': '/**/*'
+        },
+    },
 })
 ```
 
 ##### Options
-**folders:** *string[]*
+**src:** *object*
 
-list the routes what would you like to scan for typescript files (recursive).
+allow to configure source path and folders to watch.
+
+ - `root`: the root of the source path
+
+ - `folders`: object where the property keys are the source folders to watch, and the values are the destination folders
 
 **watch:** *boolean*
 
