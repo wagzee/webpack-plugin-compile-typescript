@@ -79,8 +79,8 @@ module.exports = class CompileTypescriptPlugin {
 
     createListedFile(filePath, patterns = {}) {
         const { destinationPattern, sourcePattern } = patterns;
-        const pathReplacer = `./${this.pluginOptions.src.root}${(sourcePattern.replace('/**', '').replace('/*', ''))}`;
-        const subPath = `./${path.dirname(filePath)}`.replace(pathReplacer, '');
+        const pathReplacer = path.normalize(`./${this.pluginOptions.src.root}${(sourcePattern.replace('/**', '').replace('/*', ''))}`);
+        const subPath = `${path.dirname(filePath)}/`.replace(pathReplacer, '');
         const destination = path.normalize(`${this.compileOptions.outDir}/${destinationPattern.replace('/**', `/${subPath}`).replace('/*', '/')}`)
         return {
             invalidated: false,
