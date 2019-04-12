@@ -2,7 +2,8 @@ const glob = require('glob');
 const fs = require('fs');
 const path = require('path');
 const tsc = require('typescript');
-const chokidar = require('chokidar')
+const chokidar = require('chokidar');
+const minimatch = require("minimatch");
 
 module.exports = class CompileTypescriptPlugin {
     constructor(options = {}) {
@@ -36,17 +37,7 @@ module.exports = class CompileTypescriptPlugin {
         this.pluginOptions.src.root = this.pluginOptions.src.root || '';
         this.pluginOptions.src.folders = this.pluginOptions.src.folders || {};
 
-        this.fileList = this.buildFileList();
-        this.srcWatcher = chokidar.watch(this.getFilePatterns(), {
-            persistent: true, interval: 250,
-        });
-        this.srcWatcher
-            .on('add', () => {
-                this.refreshFilesList();
-            })
-            .on('unlink', (removedPath) => {
-                this.removeFileFromList(this.getFileByName(removedPath));
-            })
+        this.fileList = []; //this.buildFileList();
     }
 
     getSrcFolders() {
@@ -66,15 +57,9 @@ module.exports = class CompileTypescriptPlugin {
         return this.getSrcFolders().map(({ sourcePattern, destinationPattern, filePattern }) => filePattern)
     }
 
-    buildFileList() {
-        return this.getSrcFolders().reduce((fileList, { sourcePattern, destinationPattern, filePattern}) => {
-            return [
-                ...fileList,
-                ...glob.sync(filePattern).map((file) => {
-                    return this.createListedFile(file, { sourcePattern, destinationPattern });
-                }),
-            ];
-        }, []);
+    getPatternsByPath(path) {
+        return this.getSrcFolders()
+            .find(srcFoler => minimatch(path, srcFoler.filePattern));
     }
 
     createListedFile(filePath, patterns = {}) {
@@ -91,22 +76,12 @@ module.exports = class CompileTypescriptPlugin {
         };
     }
 
-    addFileToList(file) {
-        const existing = this.getFileByName(file.source);
-        if (!existing) {
-            this.fileList = [
-                ...this.fileList,
-                ...[file],
-            ];
-            console.log(this.fileList);
-        }
-    }
-
     apply(compiler) {
         //
         // do some initialization after plugins added
         //
         compiler.plugin('after-plugins', () => {
+            this.initSourceWatcher();
             this.initFileWatcher(this.fileList);
             this.createServiceHost();
             if (this.pluginOptions.watch) {
@@ -135,6 +110,19 @@ module.exports = class CompileTypescriptPlugin {
         });
     }
 
+    initSourceWatcher() {
+        this.srcWatcher = chokidar.watch(this.getFilePatterns(), {
+            persistent: true, interval: 250,
+        });
+        this.srcWatcher
+            .on('add', (path, arg2) => {
+                this.addToFileList(path);
+            })
+            .on('unlink', (removedPath) => {
+                this.removeFileFromList(this.getFileByName(removedPath));
+            })
+    }
+
     initFileWatcher(files) {
         if (this.pluginOptions.watch) {
             files.forEach((file) => {
@@ -158,6 +146,7 @@ module.exports = class CompileTypescriptPlugin {
     }
 
     createServiceHost() {
+        if ( this.serviceHost && this.services ) return;
         this.serviceHost = {
             getScriptFileNames: () => this.getFileNames(),
             getScriptVersion: fileName => this.getFileVersionByName(fileName),
@@ -214,6 +203,7 @@ module.exports = class CompileTypescriptPlugin {
     }
 
     compileFile(file) {
+        this.createServiceHost();
         const sourceFileName = file.source;
         const output = this.services.getEmitOutput(sourceFileName);
 
@@ -251,25 +241,17 @@ module.exports = class CompileTypescriptPlugin {
         }, false);
     }
 
-    refreshFilesList() {
-        const newFilesToList = this.findNewFilesToList();
-        this.fileList = [
-            ...this.fileList,
-            ...newFilesToList,
-        ];
-        this.initFileWatcher(newFilesToList);
-        this.emitFiles(newFilesToList);
-    }
+    addToFileList(path) {
+        const existingFile = this.getFileByName(path);
 
-    findNewFilesToList() {
-        const allFiles = this.buildFileList();
-        return allFiles.reduce((newFiles, file) => {
-            const existingFile = this.getFileByName(file.source);
-            return [
-                ...newFiles,
-                ...(!existingFile ? [file] : []),
-            ];
-        }, []);
+        if (!existingFile) {
+            const patterns = this.getPatternsByPath(path);
+            const newFile = this.createListedFile(path, patterns);
+
+            this.fileList.push(newFile);
+            this.initFileWatcher([newFile]);
+            this.emitFiles([newFile]);
+        }
     }
 
     logErrors(fileName) {

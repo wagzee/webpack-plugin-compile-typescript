@@ -1,6 +1,6 @@
 {
   "name": "webpack-plugin-compile-typescript",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "plugin for webpack to allow compiling typescript files",
   "main": "index.js",
   "scripts": {
@@ -31,6 +31,7 @@
     "@types/node": "^9.4.6",
     "chokidar": "^2.0.3",
     "glob": "^7.1.2",
+    "minimatch": "^3.0.4",
     "typescript": "~2.8.3"
   }
 }
