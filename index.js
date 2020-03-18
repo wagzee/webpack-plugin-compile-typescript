@@ -250,7 +250,9 @@ module.exports = class CompileTypescriptPlugin {
 
             this.fileList.push(newFile);
             this.initFileWatcher([newFile]);
-            this.emitFiles([newFile]);
+            if (this.pluginOptions.watch) {
+                this.emitFiles([newFile]);
+            }        
         }
     }
 
