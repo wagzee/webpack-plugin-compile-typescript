@@ -95,6 +95,7 @@ module.exports = class CompileTypescriptPlugin {
             if (!this.pluginOptions.watch) {
                 this.incrementFilesVersion(this.fileList);
                 this.emitFiles(this.fileList);
+                this.srcWatcher.close();
             }
             callback();
         });
